@@ -8,11 +8,15 @@
 (function runGame() {
     const start = () => {
         const gameBoard = (() => {
-            const boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
+            let boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
             
-            const board = new Array(boardSize).fill().map(
+            let board = [];
+
+            function newBoard(size) {
+                boardSize = size;
+                board = new Array(boardSize).fill().map(
                 () => Array(boardSize).fill("")
-            );
+            )};
 
             function placeSymbol(row, col, symbol) {
                 board[row][col] = symbol;
@@ -68,7 +72,7 @@
                 return win;
             };
 
-            return { placeSymbol, checkWin };
+            return { newBoard, placeSymbol, checkWin };
         })();
     };
 
