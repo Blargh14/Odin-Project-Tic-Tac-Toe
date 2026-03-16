@@ -19,7 +19,12 @@
             )};
 
             function placeSymbol(row, col, symbol) {
-                board[row][col] = symbol;
+                if (board[row][col]) {
+                    board[row][col] = symbol;
+                    return true;
+                } else {
+                    return false;
+                }
             };
 
             function checkWin() {
