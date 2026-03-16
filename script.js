@@ -7,6 +7,8 @@
 
 (function runGame() {
     const start = () => {
+        let boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
+
         const player = createPlayer("placeholder", "X");
         const bot = createPlayer("random", "O");
 
@@ -16,14 +18,12 @@
         }
 
         const gameBoard = (() => {
-            let boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
             
             let board = [];
 
             function newBoard(size) {
-                boardSize = size;
-                board = new Array(boardSize).fill().map(
-                () => Array(boardSize).fill("")
+                board = new Array(size).fill().map(
+                () => Array(size).fill("")
             )};
 
             function placeSymbol(row, col, symbol) {
@@ -46,11 +46,11 @@
 
                 if (win) return win;
 
-                for (let col = 0; col < boardSize; col++) {
+                for (let col = 0; col < board.length; col++) {
                     if (board[0][col] == "") continue;
                     symbol = board[0][col];
                     win = "col" + (col + 1) + " " + symbol;
-                    for (let row = 1; row < boardSize; row++) {
+                    for (let row = 1; row < board.length; row++) {
                         if (board[row][col] != symbol) {
                             win = false;
                             break;
@@ -62,7 +62,7 @@
                 symbol = board[0][0];
                 if (symbol != "") {
                     win = "diagdown " + symbol;
-                    for (let i = 1; i < boardSize; i++) {
+                    for (let i = 1; i < board.length; i++) {
                         if (symbol != board[i][i]) {
                             win = false;
                             break;
@@ -74,7 +74,7 @@
                 symbol = board[0].at(-1);
                 if (symbol != "") {
                     win = "diagup " + symbol;
-                    for (let i = 1; i < boardSize; i++) {
+                    for (let i = 1; i < board.length; i++) {
                         if (symbol != board[i].at(-(i+1))) {
                             win = false;
                             break;
