@@ -97,6 +97,11 @@
             return { newBoard, placeSymbol, checkWin, availableMoves };
         })();
 
+        displayController =(() => {
+
+            return {};
+        })();
+        /*
         let boardSize = Number(prompt("board size x by x")); // I'm doing 3x3 but might as well learn how to automate 2d array fills.
 
         const player = createPlayer("placeholder", "X");
@@ -139,7 +144,7 @@
             }
         }
 
-        alert(verdict);
+        alert(verdict); */
     };
 
     return { start };
