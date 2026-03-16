@@ -48,7 +48,7 @@
 
                 symbol = board[0][0];
                 if (symbol != "") {
-                    win = "diagdown"
+                    win = "diagdown " + symbol;
                     for (let i = 1; i < boardSize; i++) {
                         if (symbol != board[i][i]) {
                             win = false;
@@ -60,7 +60,7 @@
 
                 symbol = board[0].at(-1);
                 if (symbol != "") {
-                    win = "diagup"
+                    win = "diagup " + symbol;
                     for (let i = 1; i < boardSize; i++) {
                         if (symbol != board[i].at(-(i+1))) {
                             win = false;
