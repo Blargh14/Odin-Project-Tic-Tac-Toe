@@ -7,6 +7,14 @@
 
 (function runGame() {
     const start = () => {
+        const player = createPlayer("placeholder", "X");
+        const bot = createPlayer("random", "O");
+
+        function createPlayer(name, symbol) {
+            let wins = 0;
+            return { name, symbol, wins }
+        }
+
         const gameBoard = (() => {
             let boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
             
