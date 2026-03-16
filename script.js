@@ -7,18 +7,12 @@
 
 (function runGame() {
     const start = () => {
-        let boardSize = 3; // I'm doing 3x3 but might as well learn how to automate 2d array fills.
-
-        const player = createPlayer("placeholder", "X");
-        const bot = createPlayer("random", "O");
-
         function createPlayer(name, symbol) {
             let wins = 0;
             return { name, symbol, wins }
         }
 
         const gameBoard = (() => {
-            
             let board = [];
 
             function newBoard(size) {
@@ -27,8 +21,9 @@
             )};
 
             function placeSymbol(row, col, symbol) {
-                if (board[row][col]) {
+                if (!board[row][col]) { // If not ""
                     board[row][col] = symbol;
+                    console.log(board); // Delete this test line
                     return true;
                 } else {
                     return false;
@@ -85,8 +80,66 @@
                 return win;
             };
 
-            return { newBoard, placeSymbol, checkWin };
+            function availableMoves() {
+                moves = [];
+
+                for (let col = 0; col < board.length; col++) {
+                    for (let row = 0; row < board.length; row++) {
+                        if (board[row][col] == "") {
+                            moves.push([row, col]);
+                        }
+                    }
+                };
+                
+                return moves;
+            }
+
+            return { newBoard, placeSymbol, checkWin, availableMoves };
         })();
+
+        let boardSize = Number(prompt("board size x by x")); // I'm doing 3x3 but might as well learn how to automate 2d array fills.
+
+        const player = createPlayer("placeholder", "X");
+        const bot = createPlayer("random", "O");
+        
+        gameBoard.newBoard(boardSize);
+
+        let over = false;
+        verdict = false;
+        while (!over) {
+            move = prompt("0-2, 0-2, no spaces").split("");
+            move = move.map((el) => Number(el));
+            gameBoard.placeSymbol(...move, player.symbol);
+            
+            verdict = gameBoard.checkWin();
+            if (verdict) {
+                over = true;
+                break;
+            }
+
+            if (!gameBoard.availableMoves().length) {
+                over = true;
+                break;
+            }
+            
+            botOptions = gameBoard.availableMoves();
+            botPick = Math.floor(Math.random() * botOptions.length);
+            botPick = botOptions[botPick];
+            console.log(botPick);
+            gameBoard.placeSymbol(...botPick, bot.symbol);
+
+            verdict = gameBoard.checkWin();
+            if (verdict) {
+                over = true;
+            }
+
+            if (!gameBoard.availableMoves().length) {
+                over = true;
+                break;
+            }
+        }
+
+        alert(verdict);
     };
 
     return { start };
