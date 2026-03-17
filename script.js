@@ -23,7 +23,6 @@
             function placeSymbol(row, col, symbol) {
                 if (!board[row][col]) { // If not ""
                     board[row][col] = symbol;
-                    console.log(board); // Delete this test line
                     return true;
                 } else {
                     return false;
@@ -114,7 +113,11 @@
                 }
             };
 
-            return { newBoard };
+            function placeSymbol(row, col, symbol) {
+                viewBoard[row][col].textContent = symbol;
+            };
+
+            return { newBoard, placeSymbol };
         })();
 
         // A little procedural here but at this point I might need the distinction
@@ -127,8 +130,12 @@
         const playerName = document.querySelector("#player-name");
         const nameButton = document.querySelector("#name-button")
         let boardSize;
-        let botSymbol = "O";
         let active = false;
+        const player = createPlayer("placeholder", "X");
+        const bot = createPlayer("random", "O");
+        const playerScore = document.querySelector("#player-score");
+        const botScore = document.querySelector("#bot-score");
+
 
         nameButton.addEventListener("click", (e) => {
             let newName = prompt("Enter name:");
@@ -138,7 +145,12 @@
         startButton.addEventListener("click", (e) => {
             if (inputs[0].checkValidity() && inputs[1].checkValidity()){
                 e.preventDefault();
-                if (inputs[1].value == "O") { botSymbol = "X" }
+                if (inputs[1].value == "O") {
+                    bot.symbol = "X";
+                } else {
+                    bot.symbol = "O";
+                }
+                player.symbol = inputs[1].value;
                 boardSize = Number(inputs[0].value);
                 gameBoard.newBoard(boardSize);
 
@@ -151,8 +163,24 @@
             }
         });
 
-        const player = createPlayer("placeholder", inputs[1].value);
-        const bot = createPlayer("random", botSymbol);
+        playZone.addEventListener("click", (e) => {
+            if (active) {
+                if (e.target.getAttribute("id") == "container") {
+                    return;
+                }
+                let [row, col] = [...e.target.getAttribute("id")].map((el) => Number(el)); // Practicing FANCY Javascript because why not. Multiple array assignment with spread operator on string into a map function that converts to Number. Would look cleaner in 5 lines of code.
+                
+                if (gameBoard.placeSymbol(row, col, player.symbol)) {
+                    displayController.placeSymbol(row, col, player.symbol);
+                    if (gameBoard.checkWin()) {
+                        playerScore.textContent = ++player.wins;
+                        alert("you are winner");
+                        active = false;
+                        return;
+                    }
+                }
+            }
+        });
         /*
 
         let over = false;
