@@ -10,9 +10,15 @@
 
 <body>
     <div id="header">
-        <button id="start-button">Start</button>
-        <label for="grid-size">Game Size (3-10): </label>
-        <input id="grid-size" type="number" value="3" min="3" max="10">
+        <button id="start-button" form="rules">Start</button>
+        <div>
+            <form id="rules">
+                <label for="grid-size">Game Size (3-10): </label>
+                <input id="grid-size" type="number" value="3" min="3" max="10" required>
+                <label for="player-symbol">Choose symbol: </label>
+                <input id="grid-size" type="text" value="X" minlength="1" maxlength="1" required>
+            </form>
+        </div>
     </div>
 
     <div id="game-board">

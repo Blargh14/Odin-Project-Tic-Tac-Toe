@@ -97,17 +97,53 @@
             return { newBoard, placeSymbol, checkWin, availableMoves };
         })();
 
-        displayController =(() => {
+        displayController = (() => {
+            let viewBoard = [];
 
-            return {};
+            function newBoard(size, container) {
+                viewBoard = new Array(size).fill().map(
+                () => Array(size).fill(""));
+
+                for (let row = 0; row < size; row++) {
+                    for (let col = 0; col < size; col++) {
+                        viewBoard[row][col] = document.createElement("div");
+                        viewBoard[row][col].setAttribute("class", "cell");
+                        viewBoard[row][col].setAttribute("id", `${row}${col}`);
+                        container.appendChild(viewBoard[row][col]);
+                    }
+                }
+            };
+
+            return { newBoard };
         })();
-        /*
-        let boardSize = Number(prompt("board size x by x")); // I'm doing 3x3 but might as well learn how to automate 2d array fills.
 
-        const player = createPlayer("placeholder", "X");
-        const bot = createPlayer("random", "O");
-        
-        gameBoard.newBoard(boardSize);
+        // A little procedural here but at this point I might need the distinction
+        // pointed out to me. Because it feels like for a program to work eventually
+        // the objects you're working with need an initial procedural declaration.
+
+        startButton = document.querySelector("#start-button");
+        playZone = document.querySelector("#container");
+        inputs = document.querySelectorAll("input");
+        let boardSize;
+        let botSymbol = "O";
+
+        startButton.addEventListener("click", (e) => {
+            if (inputs[0].checkValidity() && inputs[1].checkValidity()){
+                e.preventDefault();
+                if (inputs[1].value == "O") { botSymbol = "X" }
+                boardSize = Number(inputs[0].value);
+                gameBoard.newBoard(boardSize);
+
+                playZone.textContent = "";
+                playZone.style.setProperty("--cell-size", `${450 / boardSize}px`);
+                playZone.style.setProperty("--cell-number", `${boardSize}`);
+                displayController.newBoard(boardSize, playZone);
+            }
+        });
+
+        const player = createPlayer("placeholder", inputs[1].value);
+        const bot = createPlayer("random", botSymbol);
+        /*
 
         let over = false;
         verdict = false;
