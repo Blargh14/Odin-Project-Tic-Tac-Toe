@@ -121,11 +121,19 @@
         // pointed out to me. Because it feels like for a program to work eventually
         // the objects you're working with need an initial procedural declaration.
 
-        startButton = document.querySelector("#start-button");
-        playZone = document.querySelector("#container");
-        inputs = document.querySelectorAll("input");
+        const startButton = document.querySelector("#start-button");
+        const playZone = document.querySelector("#container");
+        const inputs = document.querySelectorAll("input");
+        const playerName = document.querySelector("#player-name");
+        const nameButton = document.querySelector("#name-button")
         let boardSize;
         let botSymbol = "O";
+        let active = false;
+
+        nameButton.addEventListener("click", (e) => {
+            let newName = prompt("Enter name:");
+            playerName.textContent = newName;
+        });
 
         startButton.addEventListener("click", (e) => {
             if (inputs[0].checkValidity() && inputs[1].checkValidity()){
@@ -138,6 +146,8 @@
                 playZone.style.setProperty("--cell-size", `${450 / boardSize}px`);
                 playZone.style.setProperty("--cell-number", `${boardSize}`);
                 displayController.newBoard(boardSize, playZone);
+
+                active = true;
             }
         });
 

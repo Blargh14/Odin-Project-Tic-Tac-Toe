@@ -27,6 +27,11 @@ input {
     font-size: 30px;
 }
 
+img {
+    height: 40px;
+    margin-right: 10px;
+}
+
 #player-score {
     margin-left: 10px;
     margin-right: 50px;
@@ -50,20 +55,12 @@ input {
 #container {
     background-color: black;
     gap: 2px;
-    --cell-size: 150px;
-    --cell-number: 3;
+    --cell-size: 450px;
+    --cell-number: 1;
     display: grid;
     grid-template-rows: repeat(var(--cell-number), var(--cell-size));
     grid-template-columns: repeat(var(--cell-number), var(--cell-size));
     font-size: var(--cell-size);
-}
-
-#p00 {
-    background-color: #555555;
-}
-
-#p22 {
-    background-color: #AAAAAA;
 }
 
 .cell {
