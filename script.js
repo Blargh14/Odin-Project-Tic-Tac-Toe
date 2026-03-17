@@ -30,8 +30,15 @@
             };
 
             function checkWin() {
-                win = false;
+                let win = false;
                 let symbol = "";
+
+                if (board.every((row) => 
+                        row.every((col) => col != "")
+                    )) {
+                    win = "tie"
+                }
+
                 board.forEach((row) => {
                     if (row.every((col) => col != "" && col == row[0])) {
                         win = "row" + (board.indexOf(row) + 1) + " " + row[0];
@@ -135,7 +142,7 @@
         const bot = createPlayer("random", "O");
         const playerScore = document.querySelector("#player-score");
         const botScore = document.querySelector("#bot-score");
-
+        let botFirst = false;
 
         nameButton.addEventListener("click", (e) => {
             let newName = prompt("Enter name:");
@@ -159,6 +166,16 @@
                 playZone.style.setProperty("--cell-number", `${boardSize}`);
                 displayController.newBoard(boardSize, playZone);
 
+                if (botFirst) {
+                    botOptions = gameBoard.availableMoves();
+                    botPick = Math.floor(Math.random() * botOptions.length);
+                    botPick = botOptions[botPick];
+
+                    gameBoard.placeSymbol(...botPick, bot.symbol)
+                    displayController.placeSymbol(...botPick, bot.symbol);
+                }
+                
+                botFirst = !botFirst;
                 active = true;
             }
         });
@@ -172,12 +189,39 @@
                 
                 if (gameBoard.placeSymbol(row, col, player.symbol)) {
                     displayController.placeSymbol(row, col, player.symbol);
-                    if (gameBoard.checkWin()) {
+
+                    let state = gameBoard.checkWin();
+
+                    if (state == "tie") {
+                        alert("tie");
+                        active = false;
+                        return;
+                    } else if (state) {
                         playerScore.textContent = ++player.wins;
                         alert("you are winner");
                         active = false;
                         return;
                     }
+                }
+                
+                botOptions = gameBoard.availableMoves();
+                botPick = Math.floor(Math.random() * botOptions.length);
+                botPick = botOptions[botPick];
+
+                gameBoard.placeSymbol(...botPick, bot.symbol)
+                displayController.placeSymbol(...botPick, bot.symbol);
+
+                let state = gameBoard.checkWin();
+
+                if (state == "tie") {
+                    alert("tie");
+                    active = false;
+                    return;
+                } else if (state) {
+                    playerScore.textContent = ++bot.wins;
+                    alert("bot is winner");
+                    active = false;
+                    return;
                 }
             }
         });
@@ -201,9 +245,6 @@
                 break;
             }
             
-            botOptions = gameBoard.availableMoves();
-            botPick = Math.floor(Math.random() * botOptions.length);
-            botPick = botOptions[botPick];
             console.log(botPick);
             gameBoard.placeSymbol(...botPick, bot.symbol);
 
