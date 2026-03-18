@@ -36,7 +36,7 @@
                 
                 board.forEach((row) => {
                     if (row.every((col) => col != "" && col == row[0])) {
-                        win = "row" + (board.indexOf(row) + 1) + " " + row[0];
+                        win = "row" + (board.indexOf(row));
                     }
                 }); // Lets me review array iteration, but doesn't allow shortcut return until the end of the forEach
                 
@@ -45,7 +45,7 @@
                 for (let col = 0; col < board.length; col++) {
                     if (board[0][col] == "") continue;
                     symbol = board[0][col];
-                    win = "col" + (col + 1) + " " + symbol;
+                    win = "col" + (col);
                     for (let row = 1; row < board.length; row++) {
                         if (board[row][col] != symbol) {
                             win = false;
@@ -57,7 +57,7 @@
                 
                 symbol = board[0][0];
                 if (symbol != "") {
-                    win = "diagdown " + symbol;
+                    win = "diagdown";
                     for (let i = 1; i < board.length; i++) {
                         if (symbol != board[i][i]) {
                             win = false;
@@ -69,7 +69,7 @@
                 
                 symbol = board[0].at(-1);
                 if (symbol != "") {
-                    win = "diagup " + symbol;
+                    win = "diagup";
                     for (let i = 1; i < board.length; i++) {
                         if (symbol != board[i].at(-(i+1))) {
                             win = false;
@@ -137,9 +137,29 @@
             function hideWinText() {
                 overlay.style.display = "none";
 
-            }
+            };
 
-            return { newBoard, placeSymbol, winText, hideWinText };
+            function highlightWin(code) {
+                if (code.includes("row")) {
+                    rowNumber = Number(code.charAt(3));
+                    viewBoard[rowNumber].map((cell) => cell.style.backgroundColor = "yellow");
+                } else if (code.includes("col")) {
+                    colNumber = Number(code.charAt(3));
+                    for (let i = 0; i < viewBoard.length; i++) {
+                        viewBoard[i][colNumber].style.backgroundColor = "yellow";
+                    }
+                } else if (code == "diagup") {
+                    for (let i = 0; i < viewBoard.length; i++) {
+                        viewBoard[i].at(-(i+1)).style.backgroundColor = "yellow";
+                    }
+                } else if (code == "diagdown") {
+                    for (let i = 0; i < viewBoard.length; i++) {
+                        viewBoard[i][i].style.backgroundColor = "yellow";
+                    }
+                }
+            };
+
+            return { newBoard, placeSymbol, winText, hideWinText, highlightWin };
         })();
 
         // A little procedural here but at this point I might need the distinction
@@ -218,6 +238,7 @@
                     return;
                 } else if (state) {
                     playerScore.textContent = ++player.wins;
+                    displayController.highlightWin(state);
                     displayController.winText("You win!");
                     active = false;
                     return;
@@ -238,6 +259,7 @@
                     return;
                 } else if (state) {
                     botScore.textContent = ++bot.wins;
+                    displayController.highlightWin(state);
                     displayController.winText("Bot Wins!");
                     active = false;
                     return;
