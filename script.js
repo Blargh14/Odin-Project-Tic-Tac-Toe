@@ -33,20 +33,15 @@
                 let win = false;
                 let symbol = "";
 
-                if (board.every((row) => 
-                        row.every((col) => col != "")
-                    )) {
-                    win = "tie"
-                }
-
+                
                 board.forEach((row) => {
                     if (row.every((col) => col != "" && col == row[0])) {
                         win = "row" + (board.indexOf(row) + 1) + " " + row[0];
                     }
                 }); // Lets me review array iteration, but doesn't allow shortcut return until the end of the forEach
-
+                
                 if (win) return win;
-
+                
                 for (let col = 0; col < board.length; col++) {
                     if (board[0][col] == "") continue;
                     symbol = board[0][col];
@@ -59,7 +54,7 @@
                     }
                     if (win) return win;
                 };
-
+                
                 symbol = board[0][0];
                 if (symbol != "") {
                     win = "diagdown " + symbol;
@@ -71,7 +66,7 @@
                     };
                 }
                 if (win) return win;
-
+                
                 symbol = board[0].at(-1);
                 if (symbol != "") {
                     win = "diagup " + symbol;
@@ -83,12 +78,20 @@
                     };
                 }
 
+                if (win) return win;
+                
+                if (board.every((row) => 
+                        row.every((col) => col != "")
+                    )) {
+                    win = "tie"
+                }
+
                 return win;
             };
-
+            
             function availableMoves() {
                 moves = [];
-
+                
                 for (let col = 0; col < board.length; col++) {
                     for (let row = 0; row < board.length; row++) {
                         if (board[row][col] == "") {
@@ -181,27 +184,30 @@
         });
 
         playZone.addEventListener("click", (e) => {
+            let state;
             if (active) {
                 if (e.target.getAttribute("id") == "container") {
                     return;
                 }
                 let [row, col] = [...e.target.getAttribute("id")].map((el) => Number(el)); // Practicing FANCY Javascript because why not. Multiple array assignment with spread operator on string into a map function that converts to Number. Would look cleaner in 5 lines of code.
                 
-                if (gameBoard.placeSymbol(row, col, player.symbol)) {
-                    displayController.placeSymbol(row, col, player.symbol);
+                if (!gameBoard.placeSymbol(row, col, player.symbol)) {
+                    return;
+                }
+                displayController.placeSymbol(row, col, player.symbol);
 
-                    let state = gameBoard.checkWin();
+                state = gameBoard.checkWin();
 
-                    if (state == "tie") {
-                        alert("tie");
-                        active = false;
-                        return;
-                    } else if (state) {
-                        playerScore.textContent = ++player.wins;
-                        alert("you are winner");
-                        active = false;
-                        return;
-                    }
+                if (state == "tie") {
+                    alert("tie");
+                    active = false;
+
+                    return;
+                } else if (state) {
+                    playerScore.textContent = ++player.wins;
+                    alert("you are winner");
+                    active = false;
+                    return;
                 }
                 
                 botOptions = gameBoard.availableMoves();
@@ -211,7 +217,7 @@
                 gameBoard.placeSymbol(...botPick, bot.symbol)
                 displayController.placeSymbol(...botPick, bot.symbol);
 
-                let state = gameBoard.checkWin();
+                state = gameBoard.checkWin();
 
                 if (state == "tie") {
                     alert("tie");
