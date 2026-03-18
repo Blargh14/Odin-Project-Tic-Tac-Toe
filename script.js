@@ -108,6 +108,8 @@
 
         displayController = (() => {
             let viewBoard = [];
+            overlay = document.querySelector("#overlay");
+            scrollText = document.querySelector("#scroll-text-target");
 
             function newBoard(size, container) {
                 viewBoard = new Array(size).fill().map(
@@ -127,7 +129,17 @@
                 viewBoard[row][col].textContent = symbol;
             };
 
-            return { newBoard, placeSymbol };
+            function winText(text) {
+                scrollText.textContent = text;
+                overlay.style.display = "flex";
+            };
+
+            function hideWinText() {
+                overlay.style.display = "none";
+
+            }
+
+            return { newBoard, placeSymbol, winText, hideWinText };
         })();
 
         // A little procedural here but at this point I might need the distinction
@@ -155,6 +167,7 @@
         startButton.addEventListener("click", (e) => {
             if (inputs[0].checkValidity() && inputs[1].checkValidity()){
                 e.preventDefault();
+                displayController.hideWinText();
                 if (inputs[1].value == "O") {
                     bot.symbol = "X";
                 } else {
@@ -199,13 +212,13 @@
                 state = gameBoard.checkWin();
 
                 if (state == "tie") {
-                    alert("tie");
+                    displayController.winText("Tie game!");
                     active = false;
 
                     return;
                 } else if (state) {
                     playerScore.textContent = ++player.wins;
-                    alert("you are winner");
+                    displayController.winText("You win!");
                     active = false;
                     return;
                 }
@@ -220,52 +233,17 @@
                 state = gameBoard.checkWin();
 
                 if (state == "tie") {
-                    alert("tie");
+                    displayController.winText("Tie game!");
                     active = false;
                     return;
                 } else if (state) {
-                    playerScore.textContent = ++bot.wins;
-                    alert("bot is winner");
+                    botScore.textContent = ++bot.wins;
+                    displayController.winText("Bot Wins!");
                     active = false;
                     return;
                 }
             }
         });
-        /*
-
-        let over = false;
-        verdict = false;
-        while (!over) {
-            move = prompt("0-2, 0-2, no spaces").split("");
-            move = move.map((el) => Number(el));
-            gameBoard.placeSymbol(...move, player.symbol);
-            
-            verdict = gameBoard.checkWin();
-            if (verdict) {
-                over = true;
-                break;
-            }
-
-            if (!gameBoard.availableMoves().length) {
-                over = true;
-                break;
-            }
-            
-            console.log(botPick);
-            gameBoard.placeSymbol(...botPick, bot.symbol);
-
-            verdict = gameBoard.checkWin();
-            if (verdict) {
-                over = true;
-            }
-
-            if (!gameBoard.availableMoves().length) {
-                over = true;
-                break;
-            }
-        }
-
-        alert(verdict); */
     };
 
     return { start };

@@ -46,6 +46,7 @@ img {
 }
 
 #game-board {
+    position: relative;
     display: flex;
     background: radial-gradient(circle,rgba(238, 238, 238, 1) 50%, rgba(85, 85, 85, 1) 100%);
     align-items: center;
@@ -69,4 +70,38 @@ img {
     justify-content: center;
     align-items: center;
     font-size: 80%;
+}
+
+#overlay {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: RGBA(0,0,0,.2);
+    align-items: center;
+}
+
+#scroll-text {
+    position: relative;
+    height: 75px;
+    width: 100%;
+    font-size: 30px;
+    background-color: RGBA(0,0,0,.4);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+#scroll-text p {
+    margin: 0;
+    position: absolute;
+    animation: scroll 20s linear infinite;
+    animation-delay: -10s;
+}
+
+
+@keyframes scroll {
+    0%   {transform: translateX(-100%); }
+    100% {transform: translateX(100vw);}
 }
