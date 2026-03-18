@@ -72,6 +72,10 @@ img {
     font-size: 80%;
 }
 
+.cell:hover {
+    background-color: rgb(230,230,255);
+}
+
 #overlay {
     display: none;
     position: absolute;
